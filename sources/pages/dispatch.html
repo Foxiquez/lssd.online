@@ -1,0 +1,385 @@
+<section class="dispatch">
+	<link rel="stylesheet" href="./sources/css/dispatch.css">
+	<div class="disp-big-block" id="overlay-selected">
+		<div class="disp-big-block-wrap">
+			<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> <span id="overlay-selected-text">Наведите курсор на юнит</span> <i class="fa fa-angle-right"></i></p>
+		</div>
+	</div>
+	<div id="pre-background"></div>
+	<canvas onmousemove="saveCoords(event.pageX,event.pageY)" id="canvas" width="1349" height="976.77">Перезагрузите страницу...</canvas>
+	<div class="dispatch-container d-flex" id="first-row">
+		<div class="disp-big-block disp-small-block">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> Список действующих диспетчеров <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+		<div class="disp-big-block disp-small-block">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> Список патрульных <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+	</div>
+	<div class="dispatch-container d-flex">
+		<span id="dispatchers"></span>
+		<span id="patrol"></span>
+	</div>
+	<div class="dispatch-container d-flex">
+		<div class="disp-big-block disp-small-block" onclick="showLog()" style="width: 100%;">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> <span id="overlay-selected-text">Открыть лог действий</span> <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+		<div class="disp-big-block disp-small-block disp-log-wrap-btn" id="log-overlay" onclick="hideLog()" style="width: 100%;">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> <span id="overlay-selected-text">Скрыть лог</span> <i class="fa fa-angle-right"></i></p>
+			</div>
+			<br><span id="log"></span>
+		</div>
+	</div>
+	<div class="dispatch-container d-flex" id="first-row">
+		<div class="disp-big-block disp-small-block" onclick="clearLog()">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> Очистить лог действий <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+		<div class="disp-big-block disp-small-block" onclick="clearTMP()">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> Очистить память сервера <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+	</div>
+	<div class="dispatch-container d-flex">
+		<div class="disp-big-block disp-small-block" onclick="changeMap()" style="width: 100%;">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> <span id="overlay-selected-text">Сменить масштаб карты</span> <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+	</div>
+	<div class="dispatch-container d-flex">
+		<div class="disp-big-block disp-small-block" id="action-overlay" onclick="hideActionOverlay()" style="width:100%;">
+			<div class="disp-big-block-wrap disp-small-block-wrap">
+				<p class="disp-big-block-text"><i class="fa fa-angle-left"></i> <span id="overlay-selected-text">Действие успешно выполнено</span> <i class="fa fa-angle-right"></i></p>
+			</div>
+		</div>
+	</div>
+</section>
+<script type="text/javascript">
+	document.getElementById("log-overlay").style.width = document.getElementById("first-row").clientWidth + "px";
+	document.getElementById("log").style.width = document.getElementById("first-row").clientWidth + "px";
+	document.getElementById("action-overlay").style.width = document.getElementById("first-row").clientWidth + "px";
+	var username = '<USERNAME>';
+	var audio = new Audio();
+	audio.preload = 'auto';
+	audio.src = '/sources/js/needhelp.wav';
+	var lastBK;
+	var i = 0
+	var MapType = "small"
+	var MapHeight = 976.77
+	window.onload = function () {
+			getDisps()
+	}
+	setInterval("getDisps()", 10000);
+	globalX = null;
+	globalY = null;
+	var canvas = document.getElementById("canvas");
+	if (canvas.getContext){
+		var ctx = canvas.getContext("2d")
+		var img = new Image()
+		img.src = "./sources/img/new-map.png"
+		ctx.drawImage(img,0,0,1349,MapHeight)
+	}
+	function map () {						
+		setTimeout(function () {    
+								
+			ctx.drawImage(img,0,0,1349,MapHeight)
+
+			w = document.getElementById("canvas").clientWidth
+			h = document.getElementById("canvas").clientHeight
+			hHeader = document.getElementById("header").clientHeight
+				
+			$.ajaxSetup({"error":function() {   
+				document.getElementById("patrol").innerHTML = ""
+			}});
+				
+			$.getJSON("./server/tmp.json?n=" + i, (responseJson) => { 
+				i=i+1
+				document.getElementById("patrol").innerHTML = ""
+				for (let p in responseJson) { 
+					responseJson[p] = JSON.parse(responseJson[p]); 
+						if (responseJson[p].driver != "null" && responseJson[p].driver != null){
+							responseJson[p].driver = responseJson[p].driver.replace(/_/g, " ")
+							if (responseJson[p].passanger != "N/A" && responseJson[p].passanger != null && responseJson[p].passanger != "null"){
+									responseJson[p].passanger = responseJson[p].passanger.replace(/_/g, " ")
+									if (responseJson[p].passanger_second != "N/A" && responseJson[p].passanger_second != null && responseJson[p].passanger_second != "null"){
+										responseJson[p].passanger_second = responseJson[p].passanger_second.replace(/_/g, " ")
+										if (responseJson[p].passanger_third != "N/A" && responseJson[p].passanger_third != null && responseJson[p].passanger_third != "null"){
+											responseJson[p].passanger_third = responseJson[p].passanger_third.replace(/_/g, " ")
+											if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+												document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & " + responseJson[p].passanger_second + " & " + responseJson[p].passanger_third + " </span><br>"
+											}
+											else {
+												document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & " + responseJson[p].passanger_second + " & " + responseJson[p].passanger_third + " [CODE-3]</span><br>"
+											}
+										}
+										else {
+											if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+												document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & " + responseJson[p].passanger_second + " </span><br>"
+											}
+											else {
+												document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & " + responseJson[p].passanger_second + " [CODE-3]</span><br>"
+											}
+										}
+									}
+									else {
+										if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+											document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + "</span><br>"
+										}
+										else {
+											document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " [CODE-3]</span><br>"
+										}
+									}
+								}
+								else {
+									if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+									document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + "</span><br>"
+									}
+									else {
+										document.getElementById("patrol").innerHTML = document.getElementById("patrol").innerHTML + "<span class=unit id=" + responseJson[p].mark + ">&nbsp[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " [CODE-3]</span><br>" 
+									}
+								}
+								if (responseJson[p].type == "patrol"){
+									ctx.fillStyle = "rgb(0,255,0)";
+								}
+								if (responseJson[p].type == "seb"){
+									ctx.fillStyle = "rgb(0, 64, 64)";
+								}
+								else if (responseJson[p].type == "aero"){
+									ctx.fillStyle = "rgb(0,0,200)";
+								}
+								else if (responseJson[p].type == "iid"){
+									ctx.fillStyle = "rgb(43, 16, 3)";
+								}
+								else if (responseJson[p].type == "det"){
+									ctx.fillStyle = "rgb(191, 64, 0)";
+								}
+								
+								var realProcX = ((Number(responseJson[p].x)+1090)*100)/4006
+								var numberMapX = ((1349*realProcX)/100)-48
+								
+								var realProcY = (responseJson[p].y*100)/3573
+								var numberMapY = ((((Number(MapHeight)*realProcY)/100)*-1)+163)
+								
+								if ( MapType != "small" ) {
+									var realProcX = (Number(responseJson[p].x)*100)/5920
+									var numberMapX = (((1349*realProcX)/100)+675)
+									
+									var realProcY = (responseJson[p].y*100)/5920
+									var numberMapY = ((((Number(MapHeight)*realProcY)/100)*-1)+645)
+								}
+								
+								var procW = (numberMapX*100)/1349
+								var procH = (numberMapY*100)/Number(MapHeight)
+								
+								var endW = (w*procW)/100
+								var endH = (h*procH)/100
+								
+								
+								ctx.fillRect (numberMapX, numberMapY, 7.5, 7.5)
+										if (responseJson[p].needHelp != "null" && responseJson[p].needHelp != null){
+											setTimeout(function () {    
+												ctx.fillStyle = "rgb(200, 0, 0)"
+												ctx.fillRect (numberMapX, numberMapY, 7.5, 7.5)
+											}, 500)
+												
+											if (lastBK != responseJson[p].mark) {
+												lastBK = responseJson[p].mark
+												audio.play();
+												document.getElementById("helpInfo").innerHTML = "[" + responseJson[p].mark + ": использована тревожная кнопка]"
+												document.getElementById("help-overlay").style.transition = "1s linear"
+												showBG()
+												document.getElementById("help-overlay").style.opacity = 1
+												document.getElementById("help-overlay").style.margin = "-850px 0px 0px"
+												if (MapType != "small") {
+													document.getElementById("help-overlay").style.margin = "-1250px 0px 0px"
+												}
+											}
+										}
+								
+								x=document.documentElement.clientWidth
+								y=document.documentElement.clientHeight
+								if ( ((globalX > endW) && (globalX < endW+7.5)) && ((globalY-hHeader > endH) && (globalY-hHeader < endH+7.5)) ){
+									document.getElementById(responseJson[p].mark).style.color = "rgb(195, 27, 41)"
+									document.getElementById("overlay-selected").style.opacity = 1
+									if (responseJson[p].passanger != "N/A" && responseJson[p].passanger != null && responseJson[p].passanger != "null"){
+										if (responseJson[p].passanger_second != "N/A" && responseJson[p].passanger_second != null && responseJson[p].passanger_second != "null"){
+											responseJson[p].passanger_second = responseJson[p].passanger_second.replace(/_/g, " ")
+											if (responseJson[p].passanger_third != "N/A" && responseJson[p].passanger_third != null && responseJson[p].passanger_third != "null"){
+												responseJson[p].passanger_third = responseJson[p].passanger_third.replace(/_/g, " ")
+												if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+													document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & "  + responseJson[p].passanger_second + " & "  + responseJson[p].passanger_third
+												}
+												else {
+													document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & "  + responseJson[p].passanger_second + " & "  + responseJson[p].passanger_third + " [CODE-3]"
+												}
+											}
+											else {
+												if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+													document.getElementById("log-overlay-selected-tect").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & "  + responseJson[p].passanger_second
+												}
+												else {
+													document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " & "  + responseJson[p].passanger_second + " [CODE-3]"
+												}
+											}
+										}
+										else {
+											if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+												document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger
+											}
+											else {
+												document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " & " + responseJson[p].passanger + " [CODE-3]"
+											}
+										}
+									}
+									else {
+										if (responseJson[p].needHelp == "null" || responseJson[p].needHelp == null){
+											document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver
+										}
+										else {
+											document.getElementById("log-overlay-selected-text").innerHTML = "[" + responseJson[p].mark + "][" + responseJson[p].ip + "] " + responseJson[p].driver + " [CODE-3]"
+										}
+									}
+								}
+								else { 
+									document.getElementById(responseJson[p].mark).style.color = "#333;"
+									setTimeout(function () {    
+									}, 10000)
+								}
+							}
+				}});                          
+			 map();                             
+			}, 1000)
+		}	map(); 
+		function saveCoords(x,y){
+		globalX = x;
+		globalY = y;
+		}
+		function wait() {
+			setTimeout(function () {    
+			}, 1000)
+		}
+		function getDisps () {
+					var xhr = new XMLHttpRequest()
+					xhr.open(
+					  'GET',
+					  '/server/dispatchers-online.php?nick=' + username,
+					  true
+					)
+					xhr.send()
+
+					xhr.onreadystatechange = function() {
+					  if (xhr.readyState != 4) {
+						return
+					  }
+
+						  if (xhr.status === 200) {
+							var Response = xhr.responseText
+								document.getElementById("dispatchers").innerHTML = Response;
+							}
+							
+						  }
+				}
+		function showLog() {
+			var xhr = new XMLHttpRequest()
+			xhr.open(
+			  'GET',
+			  '/server/dispatch-server-main.php?action=getTXT',
+			  true
+			)
+			xhr.send()
+
+			xhr.onreadystatechange = function() {
+			  if (xhr.readyState != 4) {
+				return
+			  }
+
+				  if (xhr.status === 200) {
+					var Response = xhr.responseText
+						document.getElementById("log").innerHTML = Response;
+					}
+					
+				  }
+			document.getElementById("log-overlay").style.transition = "1s linear"
+			showBG()
+			document.getElementById("log-overlay").style.opacity = 1
+			document.getElementById("log-overlay").style.margin = "-80% 0px 0px"
+			if (MapType != "small") {
+				document.getElementById("log-overlay").style.margin = "-110% 0 0"
+			}
+		}
+		function clearLog() {
+			var xhr = new XMLHttpRequest()
+			xhr.open(
+			  'GET',
+			  './server/dispatch-server-main.php?dispatch=' + username + '&action=DelLog',
+			  true
+			)
+			xhr.send()
+			showActionOverlay()
+		}
+		function clearTMP() {
+			var xhr = new XMLHttpRequest()
+			xhr.open(
+			  'GET',
+			  './server/dispatch-server-main.php?dispatch=' + username + '&action=DelTMP',
+			  true
+			)
+			xhr.send()
+			showActionOverlay()
+		}
+		function hideLog() {
+			document.getElementById("log-overlay").style.transition = "0.5s linear"
+			hideBG()
+			document.getElementById("log-overlay").style.opacity = 0
+			document.getElementById("log-overlay").style.margin = "0 0 0"
+		}
+		function hideBG() {
+			document.getElementById("pre-background").style.display = "none"
+		}
+		function showBG() {
+			document.getElementById("pre-background").style.display = "block"
+		}
+		function showActionOverlay() {
+			document.getElementById("action-overlay").style.transition = "1s linear"
+			showBG()
+			document.getElementById("action-overlay").style.opacity = 1
+			document.getElementById("action-overlay").style.margin = "-95% 0px 0px"
+			if (MapType != "small") {
+				document.getElementById("action-overlay").style.margin = "-120% 0px 0px"
+			}
+		}
+		function hideActionOverlay() {
+			document.getElementById("action-overlay").style.transition = "0.5s linear"
+			hideBG()
+			document.getElementById("action-overlay").style.opacity = 0
+			document.getElementById("action-overlay").style.margin = "0 0 0"
+		}
+		function hideHelpOverlay() {
+			document.getElementById("help-overlay").style.transition = "0.5s linear"
+			hideBG()
+			document.getElementById("help-overlay").style.opacity = 0
+			document.getElementById("help-overlay").style.margin = "0 0 0"
+		}
+		function changeMap() {
+			if (MapType == "small") {
+				MapHeight = 1300
+				MapType = "big"
+				img.src = "./sources/img/new-map-full.png"
+			} 
+			else {
+				MapHeight = 976.77
+				MapType = "small"
+				img.src = "./sources/img/new-map.png"
+			}
+			document.getElementById("canvas").height=MapHeight
+		}
+</script>

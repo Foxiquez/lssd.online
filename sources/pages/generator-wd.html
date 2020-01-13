@@ -1,0 +1,81 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="http://<DOMAIN-NAME>/sources/css/generators.css" rel="stylesheet">
+<div class="container" style="margin:0 auto; width:930px;margin-top:5px;">
+	<span id="form">
+		<div style="border: 1px solid black; padding: 5px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><div style="padding: 15px; background-color: #191919;"><span><span style="color: white"><div align="center"><span style="font-size: 150%; line-height: 116%;">LOS SANTOS COUNTY SHERIFF'S DEPARTMENT</span><br>WANTED</div></span></span></div><br><div style="padding: 15px; background-color: #f5f5f5;"><span><span style="color: black"><div style="float:right; padding:10px;"><div align="right"><input placeholder="ID СКИНА" onkeyup="changeSkin();" style="width:68px;height:18px;" id="skin-id"><br><img src="http://ls-sd.online/mugshots/108.jpg" alt="http://lssd.ru/mugshots/108.jpg" id="skin"><br><br><span style="font-weight: bold">ОБВИНЯЕТСЯ В</span><br><textarea style="width: 290px; height: 48px;" id="crime-desc">Заполнить...</textarea><br><br><span style="font-weight: bold">У Вас есть информация о <br>данной персоне? Сообщите.</span><br><textarea style="width: 290px; height: 48px;" id="other">Должность, имя фамилия, номер телефона</textarea></div></div><br><span style="font-size: 150%; line-height: 116%;"><span style="font-weight: bold">Имя и фамилия подозреваемого</span></span><br><br><textarea style="width: 418px; height: 48px;" id="reason">Короткое описание преступления...</textarea><br><br><span style="font-size: 140%; line-height: 116%;">ИНФОРМАЦИЯ О ПОДОЗРЕВАЕМОМ</span><br><br><span style="font-weight: bold">Подозреваемый:</span> <input placeholder="ФАМИЛИЯ, ИМЯ" style="width:110px;height:18px;" id="name-surname"><br><span style="font-weight: bold">Пол:</span> 
+		<select id="sex" style="width:80px;height:21px;">
+			<option>MALE</option>
+			<option>FEMALE</option>
+		</select>
+		<br><span style="font-weight: bold">Раса:</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="race"><br><span style="font-weight: bold">Возраст:</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="age"><br><span style="font-weight: bold">Оружие:</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="gun"><br><span style="font-weight: bold">Татуировки:</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="tattoss"><br><span style="font-weight: bold">Марка автомобиля:</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="mark"><br><span style="font-weight: bold">Номера автомобиля:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="number"><br><span style="font-weight: bold"> Общее описание подозреваемого(ых):</span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="desc"><br><span style="font-weight: bold"> (( Описывает *<input placeholder="Никнейм подозреваемого" style="width:165px;height:18px;" id="ooc-nick">* )):</span>(( <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="ooc-info">. ))<br><br><br><br><br><br><div style="padding: 5px; background-color: #ECD5D8; color: #BC2A4D;"><span><span style="font-size: 110%; line-height: 116%;"><div align="center"><span style="font-weight: bold">ПРЕДУПРЕЖДЕНИЕ:</span> ДАННЫЙ ЧЕЛОВЕК СЧИТАЕТСЯ ВООРУЖЕННЫМ И ОПАСНЫМ. НЕ ПЫТАЙТЕСЬ АРЕСТОВАТЬ ПОДОЗРЕВАЕМОГО САМОСТОЯТЕЛЬНО.</div></span></span></div></span></div></div>
+		<input type="submit" onclick="skins()" tabindex="6" value="ID скинов gta sa" class="gbtn">
+		<input type="submit" onclick="generate()" tabindex="6" value="Генерировать код" class="gbtn"></span>
+	</span>
+	<form id="code" name="form" style="display:none;" action="generate?post=wd" method="post">
+		<input required="required" name="topic-title" type="text" placeholder="Впишите название темы для автоматического ее создания..." tabindex="1" size="25" class="input-box">
+		<input name="submit" type="submit" tabindex="6" value="Создать тему на форуме" class="gbtn">
+		<textarea style="width:100%;height:100%;margin-top:5px;" name="topic-text" id="final-code"></textarea>
+	</form>
+	<input type="submit" style="display:none;" id="btn" onclick="back()" tabindex="6" value="Вернутся к форме" class="gbtn">
+</div>
+<script>
+	function skins() {
+		window.open('https://wiki.sa-mp.com/wiki/Skins:All');
+	}	
+	function back() {
+		document.getElementById("form").style.display = "";
+		document.getElementById("code").style.display = "none";
+		document.getElementById("btn").style.display = "none";
+	}
+		function changeSkin() {
+		document.getElementById("skin").src = "http://ls-sd.online/mugshots/" + document.getElementById("skin-id").value + ".jpg";
+	}	
+	function generate() {
+		document.getElementById("form").style.display = "none";
+		document.getElementById("code").style.display = "";
+		document.getElementById("btn").style.display = "";
+		var xhr = new XMLHttpRequest()
+		xhr.open(
+			'GET',
+			'/sources/forms/wd.bbcode',
+			true
+		)
+		xhr.send()
+							
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState != 4) {
+				return
+			}
+
+			if (xhr.status === 200) {
+				var Response = xhr.responseText
+				
+				Response = Response.replace("<SKIN>",document.getElementById("skin-id").value)
+				Response = Response.replace("<CRIME-DESC>",document.getElementById("crime-desc").value)
+				Response = Response.replace("<NAME-SURNAME>",document.getElementById("name-surname").value)
+
+				Response = Response.replace("<SEX>",document.getElementById("sex").value)
+				Response = Response.replace("<RACE>",document.getElementById("race").value)
+				Response = Response.replace("<AGE>",document.getElementById("age").value)
+
+				Response = Response.replace("<GUN>",document.getElementById("gun").value)
+				Response = Response.replace("<TATTOS>",document.getElementById("tattoss").value)
+				Response = Response.replace("<MARK>",document.getElementById("mark").value)
+
+				Response = Response.replace("<NUMBER>",document.getElementById("number").value)
+				Response = Response.replace("<DESC>",document.getElementById("desc").value)
+
+				Response = Response.replace("<REASON>",document.getElementById("reason").value)
+				Response = Response.replace("<OTHER>",document.getElementById("other").value)
+
+				Response = Response.replace("<OOC-NICK>",document.getElementById("ooc-nick").value)
+				Response = Response.replace("<OOC>",document.getElementById("ooc-info").value)
+
+				Response = Response.replace("<REASON>",document.getElementById("reason").value)
+				
+				document.getElementById("final-code").innerHTML = Response;
+			}
+			
+		}
+	}
+</script>

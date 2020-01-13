@@ -1,0 +1,31 @@
+.database {
+	width: 970px;
+	margin: 0 auto;
+	text-align: center;
+	font-weight:600;
+	text-transform:uppercase;
+	color: #fff;
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+}
+.database a {
+	text-decoration: none;
+	color: #fff;
+}
+.black-btn {
+	width: 100%;
+	padding: 15px;
+	z-index: 50;
+}
+.btn-wrap {
+	padding: 15px;
+	background: rgba(0,0,0,.86);
+	transition: all 0.1s linear;
+}
+.btn-wrap .fa {
+	color: #eebd78;
+}
+.btn-wrap:hover {
+	cursor: pointer;
+	background: #4c4c4c;
+}

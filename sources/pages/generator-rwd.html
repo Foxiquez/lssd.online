@@ -1,0 +1,54 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="http://<DOMAIN-NAME>/sources/css/generators.css" rel="stylesheet">
+<div class="container" style="margin:0 auto; width:930px;margin-top:5px;">
+	<span id="form">
+		<div style="border: 1px solid black; padding: 5px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><div style="padding: 15px; background-color: #191919;"><span><span style="color: white"><div align="center"><span style="font-size: 150%; line-height: 116%;">LOS SANTOS COUNTY SHERIFF'S DEPARTMENT</span><br>WANTED</div></span></span></div><br><div style="padding: 15px; background-color: #f5f5f5;"><span><span style="color: #000000"><ul><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">ДОКУМЕНТ:</span></span> Ответ на WANTED DATABASE от - <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="answer">.<br><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">ОТ:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="from"><br><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">К:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="to"></ul><br><ul><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">СООБЩАЕТ:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="response"><br><br><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">ПЕРЕДАНО В:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="return"><br></ul><br><br><div align="right"><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">ПОДПИСЬ:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="identificate"><br><span style="font-size: 90%; line-height: 116%;"><span style="font-weight: bold">ДАТА:</span></span> <input placeholder="ЗАПОЛНИТЬ" style="width:85px;height:18px;" id="date"></div></span><br><span style="color: #f5f5f5">-</span></span></div></div>
+		<input type="submit" onclick="generate()" tabindex="6" value="Генерировать код" class="gbtn"></span>
+	</span>
+	<form id="code" name="form" style="display:none;" action="generate?post=rwd" method="post">
+		<input required="required" name="topic-title" type="text" placeholder="Впишите ID темы для автоматического создания в ней поста..." tabindex="1" size="25" class="input-box">
+		<input name="submit" type="submit" tabindex="6" value="Оставить пост в теме форума" class="gbtn">
+		<textarea style="width:100%;height:100%;margin-top:5px;" name="topic-text" id="final-code"></textarea>
+	</form>
+	<input type="submit" style="display:none;" id="btn" onclick="back()" tabindex="6" value="Вернутся к форме" class="gbtn">
+</div>
+<script>
+	function back() {
+		document.getElementById("form").style.display = "";
+		document.getElementById("code").style.display = "none";
+		document.getElementById("btn").style.display = "none";
+	}
+	function generate() {
+		document.getElementById("form").style.display = "none";
+		document.getElementById("code").style.display = "";
+		document.getElementById("btn").style.display = "";
+		var xhr = new XMLHttpRequest()
+		xhr.open(
+			'GET',
+			'/sources/forms/rwd.bbcode',
+			true
+		)
+		xhr.send()
+							
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState != 4) {
+				return
+			}
+
+			if (xhr.status === 200) {
+				var Response = xhr.responseText
+				
+				Response = Response.replace("<ANSWER>",document.getElementById("answer").value)
+				Response = Response.replace("<FROM>",document.getElementById("from").value)
+				Response = Response.replace("<TO>",document.getElementById("to").value)
+				Response = Response.replace("<RESPONSE>",document.getElementById("response").value)
+				Response = Response.replace("<RETURN>",document.getElementById("return").value)
+				Response = Response.replace("<IDENTIFICATE>",document.getElementById("identificate").value)
+				Response = Response.replace("<DATE>",document.getElementById("date").value)
+
+				document.getElementById("final-code").innerHTML = Response;
+			}
+			
+		}
+	}
+</script>

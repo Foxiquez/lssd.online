@@ -1,0 +1,55 @@
+.container {
+  font-family: 'Montserrat', sans-serif;
+}
+.gbtn {
+	cursor: pointer;
+ 	width: 100%;
+  border-radius:0;
+  border:none;
+  background-color: #000000c9;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  border-bottom: 3px solid #0000006b;
+  box-shadow: none;
+  padding: 10px;
+  transition: 1s;
+}
+.gbtn:hover {
+	background-color: #00000061;
+ 	color:#fff;
+}
+.spoilerbox {
+	padding:3px;
+	background-color:#fff;
+	border:1px solid #d8d8d8;
+	font-size:1em;
+	margin:0.25em 0;
+}
+.input-box {
+	width:100%;
+  margin-top: 5px;
+}
+dd {
+	margin-left: 0;
+}
+#login {
+  width: 80%;
+  margin-top:15px;
+}
+#login h2 {
+  font-size:20px;
+  color:black;
+}
+#username, #password, .input-box {
+  font-weight: 300;
+  outline: none;
+  box-shadow: none;
+  height: 40px;
+  width:100%;
+  font-size:18px;
+  padding-left:5px;
+}

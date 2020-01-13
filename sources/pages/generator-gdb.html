@@ -1,0 +1,77 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="http://<DOMAIN-NAME>/sources/css/generators.css" rel="stylesheet">
+<div class="container" style="margin:0 auto; width:930px;margin-top:5px;">
+	<span id="form">
+		<div style="border: 1px solid black; padding: 5px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><div style="padding: 15px; background-color: #191919;"><span><span style="color: white"><div align="center"><span style="font-size: 150%; line-height: 116%;">LOS SANTOS COUNTY SHERIFF'S DEPARTMENT</span><br>GENERAL DATABASE</div></span></span></div><br><div style="padding: 15px; background-color: #f5f5f5;"><span><div style="float:right; padding:10px;">
+		<img src="http://ls-sd.online/mugshots/109.jpg" id="skin"></div><span style="color: #000000"><span style="font-weight: bold"><span style="text-decoration: underline">ОСНОВНАЯ ИНФОРМАЦИЯ</span></span><br><br><ul>
+		<input onkeyup="changeSkin()" placeholder="ID СКИНА" style="width:70px;height:18px;" id="skin-id"></input><br>
+		<span style="font-weight: bold">Имя:</span>
+		<input placeholder="TEXT" style="width:225px;height:18px;" id="name"></input><br><span style="font-weight: bold">Второе имя:</span>
+		<input placeholder="TEXT" style="width:225px;height:18px;" id="second-name"></input><br><span style="font-weight: bold">Фамилия:</span>
+		<input placeholder="TEXT" style="width:225px;height:18px;" id="surname"></input><br><br><span style="font-weight: bold">Пол:</span> 
+		<select id="sex" style="width:225px;height:21px;">
+			<option>MALE</option>
+			<option>FEMALE</option>
+		</select>
+		<br><span style="font-weight: bold">Раса:</span>
+		<input placeholder="TEXT" style="width:225px;height:18px;" id="race"></input><br><br><span style="font-weight: bold">Дата рождения:</span>
+		<input placeholder="ДД/МММ/ГГГГ" style="width:225px;height:18px;" id="date"></input><br><span style="font-weight: bold">Возраст:</span>
+		<input placeholder="TEXT" style="width:225px;height:18px;" id="age"></input></ul></span><br><span style="color: #f5f5f5">-</span></span></div></div>
+		<input type="submit" onclick="skins()" tabindex="6" value="ID скинов gta sa" class="gbtn">
+		<input type="submit" onclick="generate()" tabindex="6" value="Генерировать код" class="gbtn"></span>
+	</span>
+	<form id="code" name="form" style="display:none;" action="generate?post=gdb" method="post">
+		<input required="required" name="topic-title" type="text" placeholder="Впишите название темы для автоматического ее создания..." tabindex="1" size="25" class="input-box">
+		<input name="submit" type="submit" tabindex="6" value="Создать тему на форуме" class="gbtn">
+		<textarea style="width:100%;height:100%;margin-top:5px;" name="topic-text" id="final-code"></textarea>
+	</form>
+	<input type="submit" style="display:none;" id="btn" onclick="back()" tabindex="6" value="Вернутся к форме" class="gbtn">
+</div>
+<script>
+	function skins() {
+		window.open('https://wiki.sa-mp.com/wiki/Skins:All');
+	}
+	function changeSkin() {
+		document.getElementById("skin").src = "http://ls-sd.online/mugshots/" + document.getElementById("skin-id").value + ".jpg";
+	}	
+	function back() {
+		document.getElementById("form").style.display = "";
+		document.getElementById("code").style.display = "none";
+		document.getElementById("btn").style.display = "none";
+	}
+	function generate() {
+		document.getElementById("form").style.display = "none";
+		document.getElementById("code").style.display = "";
+		document.getElementById("btn").style.display = "";
+		var xhr = new XMLHttpRequest()
+		xhr.open(
+			'GET',
+			'/sources/forms/gdb.bbcode',
+			true
+		)
+		xhr.send()
+							
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState != 4) {
+				return
+			}
+
+			if (xhr.status === 200) {
+				var Response = xhr.responseText
+				
+				Response = Response.replace("<SKIN>",document.getElementById("skin-id").value)
+				Response = Response.replace("<NAME>",document.getElementById("name").value)
+				if (document.getElementById("second-name").value == "") {Response = Response.replace("<SECOND-NAME>","N/A")}
+				else {Response = Response.replace("<SECOND-NAME>",document.getElementById("second-name").value)}
+				Response = Response.replace("<SURNAME>",document.getElementById("surname").value)
+				Response = Response.replace("<SEX>",document.getElementById("sex").value)
+				Response = Response.replace("<RACE>",document.getElementById("race").value)
+				Response = Response.replace("<DATE>",document.getElementById("date").value)
+				Response = Response.replace("<AGE>",document.getElementById("age").value)
+				
+				document.getElementById("final-code").innerHTML = Response;
+			}
+			
+		}
+	}
+</script>

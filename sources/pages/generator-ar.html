@@ -1,0 +1,140 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="http://<DOMAIN-NAME>/sources/css/generators.css" rel="stylesheet">
+<div class="container" style="margin:0 auto; width:930px;margin-top:5px;">
+	<span id="form">
+		<div style="border: 1px solid black; padding: 5px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);">
+			<div style="padding: 15px; background-color: #191919;">
+				<span>
+					<span style="color: white">
+						<div align="center">
+							<span style="font-size: 150%; line-height: 116%;">LOS SANTOS COUNTY SHERIFF'S DEPARTMENT</span><br>ARREST RECORD
+						</div></span></span>
+						</div><br>
+							<div style="padding: 15px; background-color: #f5f5f5;">
+								<span>
+									<div style="float:right; padding:10px;">
+										<span style="color: #f5f5f5">____</span><br>
+										<span style="color: #f5f5f5">____</span><br>
+										<span style="color: #f5f5f5">____</span><br><span style="color: #f5f5f5">____</span><br>
+										<img src="http://ls-sd.online/mugshots/109.jpg" id="skin" alt="http://ls-sd.online/mugshots/109.jpg"><br>
+										<div align="center">
+											<span style="font-style: italic"><input placeholder="NAME SURNAME" style="width:115px;height:18px;" id="name"></input>. Снимок сделан <input placeholder="DD/MMM/YYYY" style="width:100px;height:18px;" id="date-photo"></input></span>
+										</div>
+									</div><br>
+									<span style="color: #000000">
+										<span style="font-weight: bold">
+											<span style="text-decoration: underline">ИНФОРМАЦИЯ ОБ АРЕСТЕ</span>
+										</span><br><br><ul>
+											<input onkeyup="changeSkin()" placeholder="ID СКИНА" style="width:70px;height:18px;" id="skin-id"></input><br>
+											<span style="font-weight: bold">Дата ареста:</span> <input placeholder="DD/MMM/YYYY" style="width:100px;height:18px;" id="date-arrest"></input>.<br>
+											<span style="font-weight: bold">Время ареста:</span> <input placeholder="MM:HH" style="width:50px;height:18px;" id="time"></input>.<br>
+											<span style="font-weight: bold">Место ареста:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="arrest-location"></input>.<br><br>
+											<span style="font-weight: bold">Дата заключения:</span> <input placeholder="DD/MMM/YYYY" style="width:100px;height:18px;" id="date"></input>.<br>
+											<span style="font-weight: bold">Срок заключения:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="deadline"></input>.<br>
+											<span style="font-weight: bold">Место заключения:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="location"></input>.</ul><br>
+											<span style="font-weight: bold"><span style="text-decoration: underline">ИНФОРМАЦИЯ ОБ ИЗЪЯТИИ</span>
+										</span><br><br>
+										<ul>
+											<span style="font-weight: bold">Название и марка изъятого оружия:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="gun-mark"></input>.<br>
+											<span style="font-weight: bold">Количество изъятого оружия:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="gun-ptr"></input>. (патрон/обойм)<br><br>
+											<span style="font-weight: bold">Название изъятого наркотика:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="drug-name"></input>.<br>
+											<span style="font-weight: bold">Количество изъятого наркотика:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="drug-kg"></input>.(кг/гр)<br><br>
+											<span style="font-weight: bold">Другое:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="other"></input>. (название, кол-во)
+										</ul><br>
+												<span style="font-weight: bold"><span style="text-decoration: underline">ИНФОРМАЦИЯ ОБ ОБВИНЕНИИ</span>
+											</span><br><br>
+											<ul>
+												<span style="font-weight: bold">Обвинение:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="reason"></input>.<br>
+												<span style="font-weight: bold">Штраф:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="ticket"></input>.<br>
+												<span style="font-weight: bold">Залог:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="zalog"></input>.
+											</ul>
+									</span>
+								</span>
+							</div>
+		</div>
+		<input type="submit" onclick="skins()" tabindex="6" value="ID скинов gta sa" class="gbtn">
+		<input type="submit" onclick="generate()" tabindex="6" value="Генерировать код" class="gbtn"></span>
+	</span>
+	<form id="code" name="form" style="display:none;" action="generate?post=ar" method="post">
+		<input required="required" name="topic-title" type="text" placeholder="Впишите ID темы для автоматического создания в ней поста..." tabindex="1" size="25" class="input-box">
+		<input name="submit" type="submit" tabindex="6" value="Оставить пост в теме форума" class="gbtn">
+		<textarea style="width:100%;height:100%;margin-top:5px;" name="topic-text" id="final-code"></textarea>
+	</form>
+	<input type="submit" style="display:none;" id="btn" onclick="back()" tabindex="6" value="Вернутся к форме" class="gbtn">
+</div>
+<script>
+	function skins() {
+		window.open('https://wiki.sa-mp.com/wiki/Skins:All');
+	}
+	function changeSkin() {
+		document.getElementById("skin").src = "http://ls-sd.online/mugshots/" + document.getElementById("skin-id").value + ".jpg";
+	}	
+	function back() {
+		document.getElementById("form").style.display = "";
+		document.getElementById("code").style.display = "none";
+		document.getElementById("btn").style.display = "none";
+	}
+	function generate() {
+		document.getElementById("form").style.display = "none";
+		document.getElementById("code").style.display = "";
+		document.getElementById("btn").style.display = "";
+		var xhr = new XMLHttpRequest()
+		xhr.open(
+			'GET',
+			'/sources/forms/ar.bbcode',
+			true
+		)
+		xhr.send()
+							
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState != 4) {
+				return
+			}
+
+			if (xhr.status === 200) {
+				var Response = xhr.responseText
+				
+				Response = Response.replace("<SKIN>",document.getElementById("skin-id").value)
+				Response = Response.replace("<PHOTO-NAME>",document.getElementById("name").value)
+				Response = Response.replace("<PHOTO-DATE>",document.getElementById("date-photo").value)
+
+				Response = Response.replace("<ARREST-DATE>",document.getElementById("date-arrest").value)
+				Response = Response.replace("<ARREST-TIME>",document.getElementById("time").value)
+				Response = Response.replace("<ARREST-LOC>",document.getElementById("arrest-location").value)
+
+				Response = Response.replace("<ARREST-DATE-TWO>",document.getElementById("date").value)
+				Response = Response.replace("<ARREST-TIME-TWO>",document.getElementById("deadline").value)
+				Response = Response.replace("<ARREST-LOC-TWO>",document.getElementById("location").value)
+
+				Response = Response.replace("<REASON>",document.getElementById("reason").value)
+
+				if (document.getElementById("other").value == "") {Response = Response.replace("<OTHER>","N/A")}
+				else {Response = Response.replace("<OTHER>",document.getElementById("other").value)}
+
+				if (document.getElementById("gun-mark").value == "") {Response = Response.replace("<GUN-MARK>","N/A")}
+				else {Response = Response.replace("<GUN-MARK>",document.getElementById("gun-mark").value)}
+
+				if (document.getElementById("gun-ptr").value == "") {Response = Response.replace("<GUN-PTR>","N/A")}
+				else {Response = Response.replace("<GUN-PTR>",document.getElementById("gun-ptr").value)}
+
+				if (document.getElementById("drug-name").value == "") {Response = Response.replace("<DRUG-NAME>","N/A")}
+				else {Response = Response.replace("<DRUG-NAME>",document.getElementById("drug-name").value)}
+
+				if (document.getElementById("drug-kg").value == "") {Response = Response.replace("<DRUG-KG>","N/A")}
+				else {Response = Response.replace("<DRUG-KG>",document.getElementById("drug-kg").value)}
+
+				if (document.getElementById("drug-kg").value == "") {Response = Response.replace("<DRUG-KG>","N/A")}
+				else {Response = Response.replace("<DRUG-KG>",document.getElementById("drug-kg").value)}
+
+				if (document.getElementById("ticket").value == "") {Response = Response.replace("<TICKET>","N/A")}
+				else {Response = Response.replace("<TICKET>",document.getElementById("ticket").value)}
+
+				if (document.getElementById("reason").value == "") {Response = Response.replace("<ZALOG>","N/A")}
+				else {Response = Response.replace("<ZALOG>",document.getElementById("reason").value)}
+				
+				document.getElementById("final-code").innerHTML = Response;
+			}
+			
+		}
+	}
+</script>

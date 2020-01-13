@@ -1,0 +1,40 @@
+@media screen and (max-width: 1200px) {
+	.chart_container {
+		width: 970px;
+	}
+}
+@media screen and (min-width: 1200px) {
+	.chart_container {
+		width: 100%;
+	}
+}
+.chart-container {
+	padding: 20px 0;
+	margin: 0 auto;
+}
+.chart-row {
+	margin: 25px 0;
+}
+.chart-row__element {
+	text-align: center;
+}
+.element__name {
+	padding: 5px 0;
+	font-family: Roboto;
+	font-size: 15px;
+	font-weight: 450;
+	line-height: 1.1;
+	text-transform: uppercase;
+	color: #000000d6;
+}
+.element__text {
+	font-family: Roboto;
+	font-size: 15px;
+	color: #000000c7;
+}
+.row-size-two .chart-row__element {
+	padding: 0 50px;
+}
+.row-size-three .chart-row__element {
+	padding: 0 50px;
+}

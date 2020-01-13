@@ -1,0 +1,65 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="http://<DOMAIN-NAME>/sources/css/generators.css" rel="stylesheet">
+<div class="container" style="margin:0 auto; width:930px;margin-top:5px;">
+	<span id="form">
+		<div style="border: 1px solid black; padding: 5px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"><div style="padding: 15px; background-color: #191919;"><span><span style="color: white"><div align="center"><span style="font-size: 150%; line-height: 116%;">LOS SANTOS COUNTY SHERIFF'S DEPARTMENT</span><br>TRAFFIC OFFENDER</div></span></span></div><br><div style="padding: 15px; background-color: #f5f5f5;"><span><span style="color: #f5f5f5">____</span><br><span style="color: #000000"><span style="font-weight: bold"><span style="text-decoration: underline">ИНФОРМАЦИЯ О ТРАНСПОРТЕ</span></span><br><br><ul><span style="font-weight: bold">Марка и модель транспорта:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="model-mark"></input><br><span style="font-weight: bold">Номер транспорта:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="number"></input><br><span style="font-weight: bold">Цвет транспорта:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="color"></input><br><br><span style="font-weight: bold">Владелец транспорта:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="owner"></input></ul><br><span style="font-weight: bold"><span style="text-decoration: underline">ИНФОРМАЦИЯ О НАКАЗАНИИ</span></span><br><br><ul><span style="font-weight: bold">Тип наказания:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="type"></input><br><span style="font-weight: bold">Причина:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="reason"></input><br><br><span style="font-weight: bold">Сумма штрафа:</span> <input placeholder="TEXT" style="width:40px;height:18px;" id="summ"></input><br><span style="font-weight: bold">Аннулирована ли лицензия:</span> 
+		<select id="license" style="width:50px;height:21px;">
+			<option>Да</option>
+			<option>Нет</option>
+		</select>
+		<br><br><span style="font-weight: bold">Дата выдачи:</span> <input placeholder="DD/MMM/YYYY" style="width:100px;height:18px;" id="date"></input></ul><span style="color: #f5f5f5">____</span></span></span></div></div>
+		<input type="submit" onclick="generate()" tabindex="6" value="Генерировать код" class="gbtn"></span>
+	</span>
+	<form id="code" name="form" style="display:none;" action="generate?post=to" method="post">
+		<input required="required" name="topic-title" type="text" placeholder="Впишите ID темы для автоматического создания в ней поста..." tabindex="1" size="25" class="input-box">
+		<input name="submit" type="submit" tabindex="6" value="Оставить пост в теме форума" class="gbtn">
+		<textarea style="width:100%;height:100%;margin-top:5px;" name="topic-text" id="final-code"></textarea>
+	</form>
+	<input type="submit" style="display:none;" id="btn" onclick="back()" tabindex="6" value="Вернутся к форме" class="gbtn">
+</div>
+<script>	
+	function back() {
+		document.getElementById("form").style.display = "";
+		document.getElementById("code").style.display = "none";
+		document.getElementById("btn").style.display = "none";
+	}
+	function generate() {
+		document.getElementById("form").style.display = "none";
+		document.getElementById("code").style.display = "";
+		document.getElementById("btn").style.display = "";
+		var xhr = new XMLHttpRequest()
+		xhr.open(
+			'GET',
+			'/sources/forms/to.bbcode',
+			true
+		)
+		xhr.send()
+							
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState != 4) {
+				return
+			}
+
+			if (xhr.status === 200) {
+				var Response = xhr.responseText
+				
+				Response = Response.replace("<MARK>",document.getElementById("model-mark").value)
+				Response = Response.replace("<NUMBER>",document.getElementById("number").value)
+				Response = Response.replace("<COLOR>",document.getElementById("color").value)
+
+				Response = Response.replace("<OWNER>",document.getElementById("owner").value)
+				Response = Response.replace("<TYPE>",document.getElementById("type").value)
+				Response = Response.replace("<REASON>",document.getElementById("reason").value)
+
+				Response = Response.replace("<SUMM>",document.getElementById("summ").value)
+				Response = Response.replace("<LICENSE>",document.getElementById("license").value)
+				Response = Response.replace("<DATE>",document.getElementById("date").value)
+
+				Response = Response.replace("<REASON>",document.getElementById("reason").value)
+				
+				document.getElementById("final-code").innerHTML = Response;
+			}
+			
+		}
+	}
+</script>
